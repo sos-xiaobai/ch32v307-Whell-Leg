@@ -1,0 +1,54 @@
+!!! 警告 !!!
+
+在 eclipse 和 eide 之间有一些不兼容的参数，您需要检查并手动添加到 eide 项目 !
+
+当你解决了这些不兼容的参数，你需要删除这个提示文件，否则这个文件还会再次显示 !
+
+---
+
+##### Configurations For All Targets #####
+
+//
+///// Target: 'obj' /////
+//
+
+Incompatible Args:
+    /:
+        globalArgs:
+            - <Create flash image> = true
+            - <Create extended listing> = true
+            - <Print size> = true
+            - <Optimization Level> = ilg.gnumcueclipse.managedbuild.cross.riscv.option.optimization.level.size
+            - <Debug level> = undefined
+            - <Debug format> = undefined
+            - <Architecture> = ilg.gnumcueclipse.managedbuild.cross.riscv.option.target.arch.rv32i
+            - <Integer ABI> = ilg.gnumcueclipse.managedbuild.cross.riscv.option.abi.integer.ilp32
+            - <Multiply extension (RVM)> = true
+            - <Compressed extension (RVC)> = true
+            - <undefined> = GNU MCU RISC-V GCC
+            - <Prefix> = riscv-none-embed-
+            - <C compiler> = gcc
+            - <C++ compiler> = g++
+            - <Archiver> = ar
+            - <Hex/Bin converter> = objcopy
+            - <Listing generator> = objdump
+            - <Size command> = size
+            - <Build command> = make
+            - <Remove command> = rm
+            - <undefined> = 512258282
+            - <Atomic extension (RVA)> = true
+            - <undefined> = true
+        cIncDirs: []
+        cMacros: []
+        cCompilerArgs:
+            - <Defined symbols (-D)> = undefined
+        sIncDirs: []
+        sMacros: []
+        assemblerArgs:
+            - <Use preprocessor> = true
+        linkerArgs:
+            - <Library search path (-L)> = undefined
+            - <Other objects> = undefined
+            - <Linker flags (-Xlinker [option])> = undefined
+        linkerLibArgs: []
+
