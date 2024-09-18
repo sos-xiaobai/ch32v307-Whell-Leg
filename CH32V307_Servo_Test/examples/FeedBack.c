@@ -8,7 +8,7 @@ FeedBack函数回读舵机参数于缓冲区，Readxxx(-1)函数返回缓冲区中相应的舵机状态；
 #include "ch32v30x.h"
 #include "SCServo.h"
 #include "uart.h"
-#include "wiring.h"
+#include "debug.h"
 
 void setup(void)
 {
@@ -26,23 +26,23 @@ void loop(void)
     int Move;
     int Current;
     if (FeedBack(1) != -1) {
-        Pos     = ReadPos(-1);
-        Speed   = ReadSpeed(-1);
-        Load    = ReadLoad(-1);
-        Voltage = ReadVoltage(-1);
-        Temper  = ReadTemper(-1);
-        Move    = ReadMove(-1);
-        Current = ReadCurrent(-1);
-        // printf("Pos:%d\n", Pos);
-        // printf("Speed:%d\n", Speed);
-        // printf("Load:%d\n", Load);
-        // printf("Voltage:%d\n", Voltage);
-        // printf("Temper:%d\n", Temper);
-        // printf("Move:%d\n", Move);
-        // printf("Current:%d\n", Current);
+        Pos     = ReadPos(1);
+        Speed   = ReadSpeed(1);
+        Load    = ReadLoad(1);
+        Voltage = ReadVoltage(1);
+        Temper  = ReadTemper(1);
+        Move    = ReadMove(1);
+        Current = ReadCurrent(1);
+         printf("Pos:%d\n", Pos);
+         printf("Speed:%d\n", Speed);
+         printf("Load:%d\n", Load);
+         printf("Voltage:%d\n", Voltage);
+         printf("Temper:%d\n", Temper);
+         printf("Move:%d\n", Move);
+         printf("Current:%d\n", Current);
         Delay_Ms(10);
     } else {
-        // printf("FeedBack err\n");
+         printf("FeedBack err\n");
         Delay_Ms(2000);
     }
     Pos = ReadPos(1);

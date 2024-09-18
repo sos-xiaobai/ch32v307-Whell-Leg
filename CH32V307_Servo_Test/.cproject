@@ -118,7 +118,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="examples/FeedBack.c|examples/CalibrationOfs.c|examples/ProgramEprom.c|examples/RegWritePos.c|examples/SyncRead.c|examples/SyncWritePos.c|examples/WritePos.c|examples/WriteSpe.c|examples/Broadcast.c|Startup|Peripheral|Ld|Debug" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="examples/Ping.c|examples/WritePos.c|examples/WriteSpe.c|examples/CalibrationOfs.c|examples/ProgramEprom.c|examples/RegWritePos.c|examples/SyncRead.c|examples/SyncWritePos.c|examples/Broadcast.c|Startup|Peripheral|Ld|Debug" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

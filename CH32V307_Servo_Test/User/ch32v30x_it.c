@@ -27,7 +27,7 @@ void NMI_Handler(void)
   {
   }
 }
-
+uint32_t v_mepc,v_mcause,v_mtval;
 /*********************************************************************
  * @fn      HardFault_Handler
  *
@@ -37,6 +37,9 @@ void NMI_Handler(void)
  */
 void HardFault_Handler(void)
 {
+    v_mepc=__get_MEPC();
+    v_mcause=__get_MCAUSE();
+    v_mtval=__get_MTVAL();
   while (1)
   {
   }

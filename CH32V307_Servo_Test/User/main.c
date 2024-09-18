@@ -47,7 +47,10 @@ int main(void)
     USART_Printf_Init(115200);
     setup();
 
-    loop();
+    while(1)
+    {
+        loop();
+    }
 
 
 }

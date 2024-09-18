@@ -144,14 +144,15 @@ void Uart_Init(uint32_t baudRate)
 
 void USART2_IRQHandler(void)
 {
-	USART_ClearITPendingBit(USART2, USART_IT_ORE);
+	USART_ClearITPendingBit(USART2, USART_IT_RXNE);
 	uartBuf[tail] = USART_ReceiveData(USART2);
 	tail = (tail+1)%128;
+	   NVIC_EnableIRQ(USART2_IRQn);
 }
 
 void Uart_Send(uint8_t *buf , uint8_t len)
 {
-    USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);
+   // USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);
 
    uint8_t i=0;
    for(i=0; i<len; i++){
@@ -160,7 +161,7 @@ void Uart_Send(uint8_t *buf , uint8_t len)
    }
    while(USART_GetFlagStatus(USART2, USART_FLAG_TC) == RESET);
 
-    USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
+   // USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
 }
 
 #endif

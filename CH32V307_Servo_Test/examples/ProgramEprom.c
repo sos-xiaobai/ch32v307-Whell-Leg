@@ -5,7 +5,7 @@
 #include "ch32v30x.h"
 #include "SCServo.h"
 #include "uart.h"
-#include "wiring.h"
+#include "debug.h"
 
 void setup()
 {
