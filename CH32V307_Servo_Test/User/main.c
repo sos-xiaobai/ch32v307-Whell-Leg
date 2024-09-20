@@ -25,8 +25,8 @@
  */
 
 #include "debug.h"
-#include "uart.h"
 #include "SMS_STS.h"
+#include "hipnuc.h"
 /* Global typedef */
 /*********************************************************************
  * @fn      DMA_INIT
@@ -41,15 +41,31 @@ extern void loop();
 
 int main(void)
 {
+    /* System Clock Configuration */
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
     SystemCoreClockUpdate();
     Delay_Init();
+
+    /*配置调试串口*/
     USART_Printf_Init(115200);
+
+    /*配置单线半双工模式舵机串口*/
     setup();
+
+    /*imu串口*/
+    app_init();
+
+    /*打印imu采集数据欢迎信息*/
+    printf_welcome_information();
+
 
     while(1)
     {
-        loop();
+        /*舵机测试使用*/
+        //loop();
+
+        /*imu测试使用*/
+        process_data();
     }
 
 

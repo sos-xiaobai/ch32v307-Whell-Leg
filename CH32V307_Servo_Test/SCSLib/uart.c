@@ -102,7 +102,7 @@ USART2作为舵机串口
 #ifdef USE_USART2_
 void Uart_Init(uint32_t baudRate)
 {
-    GPIO_InitTypeDef GPIO_InitStructure;
+    	GPIO_InitTypeDef GPIO_InitStructure;
         USART_InitTypeDef USART_InitStructure;
         NVIC_InitTypeDef NVIC_InitStructure;
 
@@ -148,6 +148,9 @@ void USART2_IRQHandler(void)
 	uartBuf[tail] = USART_ReceiveData(USART2);
 	tail = (tail+1)%128;
 	   NVIC_EnableIRQ(USART2_IRQn);
+
+
+	
 }
 
 void Uart_Send(uint8_t *buf , uint8_t len)

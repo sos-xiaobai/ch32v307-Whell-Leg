@@ -37,7 +37,7 @@ Incompatible Args:
             - <Remove command> = rm
             - <undefined> = 512258282
             - <Atomic extension (RVA)> = true
-            - <undefined> = true
+            - <Extra Compressed extension (RVXW)> = true
         cIncDirs: []
         cMacros: []
         cCompilerArgs:

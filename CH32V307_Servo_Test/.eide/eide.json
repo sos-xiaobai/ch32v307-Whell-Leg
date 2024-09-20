@@ -3,239 +3,16 @@
   "type": "RISC-V",
   "dependenceList": [],
   "srcDirs": [
-    "User",
-    "Core",
-    "Debug",
-    "Ld",
-    "Peripheral",
-    "Startup"
+    "examples",
+    "imu_lib",
+    "SCSLib",
+    "SRC",
+    "User"
   ],
   "virtualFolder": {
     "name": "<virtual_root>",
     "files": [],
-    "folders": [
-      {
-        "name": "Core",
-        "files": [
-          {
-            "path": "../../SRC/Core/core_riscv.h"
-          },
-          {
-            "path": "../../SRC/Core/core_riscv.c"
-          }
-        ],
-        "folders": []
-      },
-      {
-        "name": "Debug",
-        "files": [
-          {
-            "path": "../../SRC/Debug/debug.h"
-          },
-          {
-            "path": "../../SRC/Debug/debug.c"
-          }
-        ],
-        "folders": []
-      },
-      {
-        "name": "Ld",
-        "files": [],
-        "folders": []
-      },
-      {
-        "name": "Peripheral",
-        "files": [],
-        "folders": [
-          {
-            "name": "src",
-            "files": [
-              {
-                "path": "../../SRC/Peripheral/src/ch32v30x_wwdg.c"
-              },
-              {
-                "path": "../../SRC/Peripheral/src/ch32v30x_usart.c"
-              },
-              {
-                "path": "../../SRC/Peripheral/src/ch32v30x_tim.c"
-              },
-              {
-                "path": "../../SRC/Peripheral/src/ch32v30x_spi.c"
-              },
-              {
-                "path": "../../SRC/Peripheral/src/ch32v30x_sdio.c"
-              },
-              {
-                "path": "../../SRC/Peripheral/src/ch32v30x_rtc.c"
-              },
-              {
-                "path": "../../SRC/Peripheral/src/ch32v30x_rng.c"
-              },
-              {
-                "path": "../../SRC/Peripheral/src/ch32v30x_rcc.c"
-              },
-              {
-                "path": "../../SRC/Peripheral/src/ch32v30x_pwr.c"
-              },
-              {
-                "path": "../../SRC/Peripheral/src/ch32v30x_opa.c"
-              },
-              {
-                "path": "../../SRC/Peripheral/src/ch32v30x_misc.c"
-              },
-              {
-                "path": "../../SRC/Peripheral/src/ch32v30x_iwdg.c"
-              },
-              {
-                "path": "../../SRC/Peripheral/src/ch32v30x_i2c.c"
-              },
-              {
-                "path": "../../SRC/Peripheral/src/ch32v30x_gpio.c"
-              },
-              {
-                "path": "../../SRC/Peripheral/src/ch32v30x_fsmc.c"
-              },
-              {
-                "path": "../../SRC/Peripheral/src/ch32v30x_flash.c"
-              },
-              {
-                "path": "../../SRC/Peripheral/src/ch32v30x_exti.c"
-              },
-              {
-                "path": "../../SRC/Peripheral/src/ch32v30x_eth.c"
-              },
-              {
-                "path": "../../SRC/Peripheral/src/ch32v30x_dvp.c"
-              },
-              {
-                "path": "../../SRC/Peripheral/src/ch32v30x_dma.c"
-              },
-              {
-                "path": "../../SRC/Peripheral/src/ch32v30x_dbgmcu.c"
-              },
-              {
-                "path": "../../SRC/Peripheral/src/ch32v30x_dac.c"
-              },
-              {
-                "path": "../../SRC/Peripheral/src/ch32v30x_crc.c"
-              },
-              {
-                "path": "../../SRC/Peripheral/src/ch32v30x_can.c"
-              },
-              {
-                "path": "../../SRC/Peripheral/src/ch32v30x_bkp.c"
-              },
-              {
-                "path": "../../SRC/Peripheral/src/ch32v30x_adc.c"
-              }
-            ],
-            "folders": []
-          },
-          {
-            "name": "inc",
-            "files": [
-              {
-                "path": "../../SRC/Peripheral/inc/ch32v30x_wwdg.h"
-              },
-              {
-                "path": "../../SRC/Peripheral/inc/ch32v30x_usb.h"
-              },
-              {
-                "path": "../../SRC/Peripheral/inc/ch32v30x_usart.h"
-              },
-              {
-                "path": "../../SRC/Peripheral/inc/ch32v30x_tim.h"
-              },
-              {
-                "path": "../../SRC/Peripheral/inc/ch32v30x_spi.h"
-              },
-              {
-                "path": "../../SRC/Peripheral/inc/ch32v30x_sdio.h"
-              },
-              {
-                "path": "../../SRC/Peripheral/inc/ch32v30x_rtc.h"
-              },
-              {
-                "path": "../../SRC/Peripheral/inc/ch32v30x_rng.h"
-              },
-              {
-                "path": "../../SRC/Peripheral/inc/ch32v30x_rcc.h"
-              },
-              {
-                "path": "../../SRC/Peripheral/inc/ch32v30x_pwr.h"
-              },
-              {
-                "path": "../../SRC/Peripheral/inc/ch32v30x_opa.h"
-              },
-              {
-                "path": "../../SRC/Peripheral/inc/ch32v30x_misc.h"
-              },
-              {
-                "path": "../../SRC/Peripheral/inc/ch32v30x_iwdg.h"
-              },
-              {
-                "path": "../../SRC/Peripheral/inc/ch32v30x_i2c.h"
-              },
-              {
-                "path": "../../SRC/Peripheral/inc/ch32v30x_gpio.h"
-              },
-              {
-                "path": "../../SRC/Peripheral/inc/ch32v30x_fsmc.h"
-              },
-              {
-                "path": "../../SRC/Peripheral/inc/ch32v30x_flash.h"
-              },
-              {
-                "path": "../../SRC/Peripheral/inc/ch32v30x_exti.h"
-              },
-              {
-                "path": "../../SRC/Peripheral/inc/ch32v30x_eth.h"
-              },
-              {
-                "path": "../../SRC/Peripheral/inc/ch32v30x_dvp.h"
-              },
-              {
-                "path": "../../SRC/Peripheral/inc/ch32v30x_dma.h"
-              },
-              {
-                "path": "../../SRC/Peripheral/inc/ch32v30x_dbgmcu.h"
-              },
-              {
-                "path": "../../SRC/Peripheral/inc/ch32v30x_dac.h"
-              },
-              {
-                "path": "../../SRC/Peripheral/inc/ch32v30x_crc.h"
-              },
-              {
-                "path": "../../SRC/Peripheral/inc/ch32v30x_can.h"
-              },
-              {
-                "path": "../../SRC/Peripheral/inc/ch32v30x_bkp.h"
-              },
-              {
-                "path": "../../SRC/Peripheral/inc/ch32v30x_adc.h"
-              },
-              {
-                "path": "../../SRC/Peripheral/inc/ch32v30x.h"
-              }
-            ],
-            "folders": []
-          }
-        ]
-      },
-      {
-        "name": "Startup",
-        "files": [
-          {
-            "path": "../../SRC/Startup/startup_ch32v30x_D8C.S"
-          },
-          {
-            "path": "../../SRC/Startup/startup_ch32v30x_D8.S"
-          }
-        ],
-        "folders": []
-      }
-    ]
+    "folders": []
   },
   "outDir": "build",
   "deviceName": null,
@@ -246,12 +23,19 @@
   "targets": {
     "obj": {
       "excludeList": [
-        "<virtual_root>/Startup",
-        "<virtual_root>/Peripheral",
-        "<virtual_root>/Ld",
-        "<virtual_root>/Debug",
-        "<virtual_root>/Core",
-        "startup_ch32v30x_D8.S"
+        "examples/Ping.c",
+        "examples/WritePos.c",
+        "examples/WriteSpe.c",
+        "examples/CalibrationOfs.c",
+        "examples/ProgramEprom.c",
+        "examples/RegWritePos.c",
+        "examples/SyncRead.c",
+        "examples/SyncWritePos.c",
+        "examples/Broadcast.c",
+        "Startup",
+        "Peripheral",
+        "Ld",
+        "Debug"
       ],
       "toolchain": "RISCV_GCC",
       "compileConfig": {
@@ -274,10 +58,13 @@
       "custom_dep": {
         "name": "default",
         "incList": [
-          "../../SRC/Debug",
-          "../../SRC/Core",
+          "SRC/Ld/Link.ld",
+          "SRC/Debug",
+          "SCSLib",
+          "SRC/Startup",
+          "SRC/Core",
           "User",
-          "../../SRC/Peripheral/inc"
+          "SRC/Peripheral/inc"
         ],
         "libList": [],
         "defineList": []
@@ -298,7 +85,9 @@
               "-ffunction-sections",
               "-fdata-sections",
               "-Wunused",
-              "-Wuninitialised"
+              "-Wuninitialized",
+              "-msave-restore",
+              "-fno-common"
             ]
           },
           "c/cpp-compiler": {
@@ -317,7 +106,7 @@
           "linker": {
             "output-format": "elf",
             "remove-unused-input-sections": true,
-            "LD_FLAGS": "-Xlinker --gc-sections -TLd/Link.ld -nostartfiles --specs=nano.specs --specs=nosys.specs -TLink.ld",
+            "LD_FLAGS": "-Xlinker --gc-sections -TSRC/Ld/Link.ld -nostartfiles --specs=nano.specs --specs=nosys.specs -TLink.ld",
             "LIB_FLAGS": "-lm"
           }
         }
