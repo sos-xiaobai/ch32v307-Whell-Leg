@@ -18,7 +18,7 @@ Incompatible Args:
             - <Create flash image> = true
             - <Create extended listing> = true
             - <Print size> = true
-            - <Optimization Level> = ilg.gnumcueclipse.managedbuild.cross.riscv.option.optimization.level.size
+            - <Optimization Level> = ilg.gnumcueclipse.managedbuild.cross.riscv.option.optimization.level.none
             - <Debug level> = undefined
             - <Debug format> = undefined
             - <Architecture> = ilg.gnumcueclipse.managedbuild.cross.riscv.option.target.arch.rv32i
@@ -50,5 +50,6 @@ Incompatible Args:
             - <Library search path (-L)> = undefined
             - <Other objects> = undefined
             - <Linker flags (-Xlinker [option])> = undefined
+            - <Use wchprintf(-lprintf)> = false
         linkerLibArgs: []
 

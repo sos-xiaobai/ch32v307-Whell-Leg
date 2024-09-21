@@ -188,7 +188,7 @@ static void USART_Configuration(uint32_t usart4_baud)
 
     /* NVIC configuration for USART2 interrupt */
     NVIC_InitStructure.NVIC_IRQChannel                   = UART4_IRQn;
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
     NVIC_InitStructure.NVIC_IRQChannelSubPriority        = 0;
     NVIC_InitStructure.NVIC_IRQChannelCmd                = ENABLE;
     NVIC_Init(&NVIC_InitStructure);

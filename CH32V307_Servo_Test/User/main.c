@@ -12,29 +12,14 @@
 
 /*
  *@Note
- *single wire half duplex mode, master/slave mode transceiver routine:
- *Master:USART2_Tx(PA2)
- *Slave:USART3_Tx(PB10)
- *
- *This example demonstrates UART2 and USART3 single-wire half-duplex
- *mode data transmission and reception.
- *
- *   Hardware connection:PA2 -- PB10
- * Note: The pin should be GPIO_Mode_AF_OD in single-wire half-duplex mode.
- *       The pin needs to connected a pull_up resistor
+
  */
 
 #include "debug.h"
 #include "SMS_STS.h"
 #include "hipnuc.h"
-/* Global typedef */
-/*********************************************************************
- * @fn      DMA_INIT
- *
- * @brief   Configures the DMA for USART2 & USART3.
- *
- * @return  none
- */
+#include "minipc.h"
+
 extern void setup();
 extern void loop();
 
@@ -58,6 +43,9 @@ int main(void)
     /*打印imu采集数据欢迎信息*/
     printf_welcome_information();
 
+    /*上位机串口接收初始化*/
+    Minipc_Init();
+
 
     while(1)
     {
@@ -65,7 +53,7 @@ int main(void)
         //loop();
 
         /*imu测试使用*/
-        process_data();
+        //process_data();
     }
 
 

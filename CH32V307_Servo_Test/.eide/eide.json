@@ -5,6 +5,7 @@
   "srcDirs": [
     "examples",
     "imu_lib",
+    "minipc",
     "SCSLib",
     "SRC",
     "User"
@@ -59,6 +60,8 @@
         "name": "default",
         "incList": [
           "SRC/Ld/Link.ld",
+          "minipc",
+          "imu_lib",
           "SRC/Debug",
           "SCSLib",
           "SRC/Startup",
@@ -106,7 +109,7 @@
           "linker": {
             "output-format": "elf",
             "remove-unused-input-sections": true,
-            "LD_FLAGS": "-Xlinker --gc-sections -TSRC/Ld/Link.ld -nostartfiles --specs=nano.specs --specs=nosys.specs -TLink.ld",
+            "LD_FLAGS": "-Xlinker --gc-sections -TSRC/Ld/Link.ld -nostartfiles --specs=nano.specs --specs=nosys.specs -lprintfloat -TLink.ld",
             "LIB_FLAGS": "-lm"
           }
         }
