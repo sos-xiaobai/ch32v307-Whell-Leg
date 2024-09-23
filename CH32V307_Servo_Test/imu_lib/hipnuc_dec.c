@@ -50,7 +50,7 @@
 #define LOG_STRING_SIZE  (512)
 
 /* IMU stream read/control struct */
-static hipnuc_raw_t hipnuc_raw = {0};
+hipnuc_raw_t hipnuc_raw = {0};
 
 /* 0: no new data arrived, 1: new data arrived */
 static uint8_t new_data_flag = 0;
@@ -124,8 +124,8 @@ void process_data(void)
                 /* Display result */
                 //printf("parse ok, frame len:%d\r\n", hipnuc_raw.len);
                 //printf("%s\r\n", log_buf);
-                printf("pitch yaw roll:%.3f, %.3f, %.3f\r\n", hipnuc_raw.hi91.pitch, hipnuc_raw.hi91.yaw, hipnuc_raw.hi91.roll);
-
+//                printf("pitch yaw roll:%.3f, %.3f, %.3f\r\n", hipnuc_raw.hi91.pitch, hipnuc_raw.hi91.yaw, hipnuc_raw.hi91.roll);
+//printf("%.3f\r\n",hipnuc_raw.hi91.gyr[1]);
                 /*
                 You can use data as for example:
 

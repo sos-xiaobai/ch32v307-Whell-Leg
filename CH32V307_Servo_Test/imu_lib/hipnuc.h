@@ -131,6 +131,8 @@ typedef struct
 #pragma pack(pop)
 #endif
 
+extern hipnuc_raw_t hipnuc_raw;
+
 int hipnuc_input(hipnuc_raw_t *raw, uint8_t data);
 int hipnuc_dump_packet(hipnuc_raw_t *raw, char *buf, size_t buf_size);
 
