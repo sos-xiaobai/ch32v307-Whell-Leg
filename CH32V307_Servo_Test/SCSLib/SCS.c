@@ -10,7 +10,7 @@
 #include "SCS.h"
 
 static uint8_t Level =1;//舵机返回等级
-static uint8_t End = 0;//处理器大小端结构
+static uint8_t End = 1;//处理器大小端结构
 //static uint8_t Error = 0;//舵机状态
 uint8_t syncReadRxPacketIndex;
 uint8_t syncReadRxPacketLen;

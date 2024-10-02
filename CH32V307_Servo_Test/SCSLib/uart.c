@@ -16,6 +16,8 @@ __IO uint8_t uartBuf[128];
 __IO int head = 0;
 __IO int tail  = 0;
 
+uint8_t *TxBuffer;
+
 void Uart_Flush(void)
 {
 	head = tail = 0;
@@ -99,9 +101,13 @@ void Uart_Send(uint8_t *buf , uint8_t len)
 配置USART2，端口映射(TX)PA2/(RX)PA3
 USART2作为舵机串口
 ------------------*/
+DMA_InitTypeDef DMA_InitStructure = {0};
 #ifdef USE_USART2_
 void Uart_Init(uint32_t baudRate)
 {
+
+
+
     	GPIO_InitTypeDef GPIO_InitStructure;
         USART_InitTypeDef USART_InitStructure;
         NVIC_InitTypeDef NVIC_InitStructure;
@@ -138,8 +144,31 @@ void Uart_Init(uint32_t baudRate)
         NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
         NVIC_Init(&NVIC_InitStructure);
 
+
+
         // 启用 USART2
         USART_Cmd(USART2, ENABLE);
+
+
+//
+//        RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
+//
+//        DMA_DeInit(DMA1_Channel7);
+//        DMA_InitStructure.DMA_PeripheralBaseAddr = (u32)(&USART2->DATAR); /* USART2->DATAR:0x40004404 */
+//        DMA_InitStructure.DMA_MemoryBaseAddr = (u32)TxBuffer;
+//        DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralDST;
+//        DMA_InitStructure.DMA_BufferSize = 128;
+//        DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
+//        DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
+//        DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;
+//        DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;
+//        DMA_InitStructure.DMA_Mode = DMA_Mode_Normal;
+//        DMA_InitStructure.DMA_Priority = DMA_Priority_VeryHigh;
+//        DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;
+//        DMA_Init(DMA1_Channel7, &DMA_InitStructure);
+//        /*启用dma发送*/
+//        DMA_Cmd(DMA1_Channel7, ENABLE); /* USART2 Tx */
+//        USART_DMACmd(USART2, USART_DMAReq_Tx, ENABLE);
 }
 
 void USART2_IRQHandler(void)
@@ -147,7 +176,7 @@ void USART2_IRQHandler(void)
 	USART_ClearITPendingBit(USART2, USART_IT_RXNE);
 	uartBuf[tail] = USART_ReceiveData(USART2);
 	tail = (tail+1)%128;
-	   NVIC_EnableIRQ(USART2_IRQn);
+	NVIC_EnableIRQ(USART2_IRQn);
 
 
 	
@@ -165,6 +194,15 @@ void Uart_Send(uint8_t *buf , uint8_t len)
    while(USART_GetFlagStatus(USART2, USART_FLAG_TC) == RESET);
 
    // USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
+
+//    TxBuffer = buf;
+//    DMA_DeInit(DMA1_Channel7);  //初始化
+//    DMA_Cmd(DMA1_Channel7, DISABLE);  //先失能ＤＭＡ
+//    DMA_InitStructure.DMA_BufferSize=len;  //发送的数据量大小
+//    DMA_Init(DMA1_Channel7, &DMA_InitStructure);
+//    DMA_Cmd(DMA1_Channel7, ENABLE);  //再使能 DMA
+//    //while(DMA_GetFlagStatus(DMA1_FLAG_TC7) == RESET) {;};
+
 }
 
 #endif
@@ -177,12 +215,14 @@ USART5作为舵机串口
 #ifdef USE_USART5_
 void Uart_Init(uint32_t baudRate)
 {
-        GPIO_InitTypeDef GPIO_InitStructure;
+    GPIO_InitTypeDef GPIO_InitStructure;
         USART_InitTypeDef USART_InitStructure;
         NVIC_InitTypeDef NVIC_InitStructure;
 
-        // 启用 GPIOC 和 USART2 时钟
+
+        // 启用 GPIOC 和 USART5 时钟
         RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
+        RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOD, ENABLE);
         RCC_APB1PeriphClockCmd(RCC_APB1Periph_UART5, ENABLE);
 
         // 配置 USART5 Tx (PC12) 为推挽复用输出
@@ -190,6 +230,11 @@ void Uart_Init(uint32_t baudRate)
         GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
         GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
         GPIO_Init(GPIOC, &GPIO_InitStructure);
+
+        GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
+
+        GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+        GPIO_Init(GPIOD, &GPIO_InitStructure);
 
         // 配置 USART5
         USART_InitStructure.USART_BaudRate = baudRate;
@@ -222,12 +267,14 @@ void UART5_IRQHandler(void)
     USART_ClearITPendingBit(UART5, USART_IT_RXNE);
     uartBuf[tail] = USART_ReceiveData(UART5);
     tail = (tail+1)%128;
-       NVIC_EnableIRQ(UART5_IRQn);
+    NVIC_EnableIRQ(UART5_IRQn);
 }
+
+
 
 void Uart_Send(uint8_t *buf , uint8_t len)
 {
-   // USART_ITConfig(UART5, USART_IT_RXNE, DISABLE);
+    USART_ITConfig(UART5, USART_IT_RXNE, DISABLE);
 
    uint8_t i=0;
    for(i=0; i<len; i++){
@@ -236,7 +283,7 @@ void Uart_Send(uint8_t *buf , uint8_t len)
    }
    while(USART_GetFlagStatus(UART5, USART_FLAG_TC) == RESET);
 
-   // USART_ITConfig(UART5, USART_IT_RXNE, ENABLE);
+    USART_ITConfig(UART5, USART_IT_RXNE, ENABLE);
 }
 
 #endif

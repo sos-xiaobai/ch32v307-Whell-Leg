@@ -1,6 +1,7 @@
 #ifndef		_UART_H
 #define		_UART_H
-#define     USE_USART5_
+//#define     USE_USART5_
+#define USE_USART2_
 #include <stdint.h>
 extern void Uart_Init(uint32_t baudRate);
 extern void Uart_Flush(void);

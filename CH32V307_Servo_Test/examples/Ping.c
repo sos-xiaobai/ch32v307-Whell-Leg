@@ -16,7 +16,7 @@ void setup()
 
 void loop()
 {
-    int ID = Ping(1);
+    int ID = Ping(2);
     if (ID != -1) {
          printf("Servo ID:%d\n", ID);
         Delay_Ms(100);

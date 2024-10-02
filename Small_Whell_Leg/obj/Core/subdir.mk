@@ -16,6 +16,6 @@ OBJS += \
 
 # Each subdirectory must supply rules for building sources it contributes
 Core/%.o: ../Core/%.c
-	@	@	riscv-none-embed-gcc -march=rv32imacxw -mabi=ilp32 -msmall-data-limit=8 -msave-restore -Os -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common -Wunused -Wuninitialized  -g -I"D:\RM\ch32v307-Whell-Leg\Small_Whell_Leg\Debug" -I"D:\RM\ch32v307-Whell-Leg\Small_Whell_Leg\Core" -I"D:\RM\ch32v307-Whell-Leg\Small_Whell_Leg\User" -I"D:\RM\ch32v307-Whell-Leg\Small_Whell_Leg\Peripheral\inc" -std=gnu99 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -c -o "$@" "$<"
+	@	@	riscv-none-embed-gcc -march=rv32imacxw -mabi=ilp32 -msmall-data-limit=8 -msave-restore -Os -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common -Wunused -Wuninitialized  -g -I"E:\files\2025funny program\jumping_jumping\ch32v307-Whell-Leg\Small_Whell_Leg\Debug" -I"E:\files\2025funny program\jumping_jumping\ch32v307-Whell-Leg\Small_Whell_Leg\Core" -I"E:\files\2025funny program\jumping_jumping\ch32v307-Whell-Leg\Small_Whell_Leg\User" -I"E:\files\2025funny program\jumping_jumping\ch32v307-Whell-Leg\Small_Whell_Leg\Peripheral\inc" -std=gnu99 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -c -o "$@" "$<"
 	@	@
 
