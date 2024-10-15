@@ -13,7 +13,7 @@ void delay(uint32_t ms)
     while (millis() < end);
 }
 
-void SysTick_Handler(void)
-{
-    TimingMillis++;
-}
+//void SysTick_Handler(void)
+//{
+//    TimingMillis++;
+//}

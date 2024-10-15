@@ -5,11 +5,36 @@
         }
     ],
     "settings": {
+        "MicroPython.executeButton": [
+            {
+                "text": "▶",
+                "tooltip": "运行",
+                "alignment": "left",
+                "command": "extension.executeFile",
+                "priority": 3.5
+            }
+        ],
+        "MicroPython.syncButton": [
+            {
+                "text": "$(sync)",
+                "tooltip": "同步",
+                "alignment": "left",
+                "command": "extension.execute",
+                "priority": 4
+            }
+        ],
         "files.associations": {
-            "minipc.h": "c",
-            "string.h": "c",
+            "usart.h": "c",
+            "ring_buffer.h": "c",
+            "motor.h": "c",
+            "pid.h": "c",
             "hipnuc.h": "c",
-            "ch32v30x.h": "c"
+            "debug.h": "c",
+            "stdio.h": "c",
+            "fashion_star_uart_servo.h": "c",
+            "ch32v30x.h": "c",
+            "sys_tick.h": "c",
+            "math.h": "c"
         }
     },
     "extensions": {}

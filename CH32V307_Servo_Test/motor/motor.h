@@ -135,7 +135,7 @@ extern Enum_LK_Motor_Status LK_Motor_Status;
 extern Struct_LK_Motor_Rx_Data Data;
 extern Struct_LK_Motor_Rx_Data Motor_Left;
 extern Struct_LK_Motor_Rx_Data Motor_Right;
-
+extern float voltage;
 void Data_Process(uint8_t* CAN_Rx_Buffer,Struct_LK_Motor_Rx_Data* Data);
 //void CAN_RxCpltCallback(uint8_t *Rx_Data);
 void TIM_Alive_PeriodElapsedCallback();

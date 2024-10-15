@@ -8,6 +8,7 @@ typedef struct
     float error, lastError; //误差、上次误差
     float integral, maxIntegral; //积分、积分限幅
     float output, maxOutput; //输出、输出限幅
+    float dout;
 }PID;
 
 

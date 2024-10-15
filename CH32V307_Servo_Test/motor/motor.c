@@ -35,7 +35,7 @@ float Current_Max = 850;
 Enum_LK_Motor_Status LK_Motor_Status = LK_Motor_Status_DISABLE;
 Struct_LK_Motor_Rx_Data Motor_Left;
 Struct_LK_Motor_Rx_Data Motor_Right;
-
+float voltage         = 0;
 /* Private function declarations ---------------------------------------------*/
 
 /* Function prototypes -------------------------------------------------------*/
@@ -56,40 +56,47 @@ void Data_Process(uint8_t* CAN_Rx_Buffer,Struct_LK_Motor_Rx_Data* Data)
 //    printf("%d",sizeof(tmp_buffer));
     memcpy((void *)&tmp_buffer,(void *)CAN_Rx_Buffer,8);
 
-    tmp_encoder = tmp_buffer.Encoder_Reverse;
-    tmp_omega = tmp_buffer.Omega_Reverse;
-    tmp_current = tmp_buffer.Current_Reverse;
-
-    //计算圈数与总角度值
-    if(Data->Start_Flag==1)
+    if(CAN_Rx_Buffer[0]==0x9a)
     {
-        delta_encoder = tmp_encoder - Data->Pre_Encoder;
-        if (delta_encoder < -(Position_Max / 2))
-        {
-            //正方向转过了一圈
-            Data->Total_Round++;
-        }
-        else if (delta_encoder > (Position_Max / 2))
-        {
-            //反方向转过了一圈
-            Data->Total_Round--;
-        }
+        voltage=(CAN_Rx_Buffer[3]<<8|CAN_Rx_Buffer[2])/100.0;
+    }
+    else {
+        tmp_encoder = tmp_buffer.Encoder_Reverse;
+           tmp_omega = tmp_buffer.Omega_Reverse;
+           tmp_current = tmp_buffer.Current_Reverse;
+
+           //计算圈数与总角度值
+           if(Data->Start_Flag==1)
+           {
+               delta_encoder = tmp_encoder - Data->Pre_Encoder;
+               if (delta_encoder < -(Position_Max / 2))
+               {
+                   //正方向转过了一圈
+                   Data->Total_Round++;
+               }
+               else if (delta_encoder > (Position_Max / 2))
+               {
+                   //反方向转过了一圈
+                   Data->Total_Round--;
+               }
+           }
+
+           Data->Total_Encoder = Data->Total_Round * Position_Max + tmp_encoder;
+
+           //计算电机本身信息
+           Data->CMD_ID = tmp_buffer.CMD_ID;
+           Data->Now_Angle = (float)Data->Total_Encoder / (float)Position_Max *360.0f;
+           Data->Now_Radian = Data->Now_Angle * DEG_TO_RAD;
+           Data->Now_Omega_Angle = tmp_omega;
+           Data->Now_Omega_Radian = tmp_omega * DEG_TO_RAD;
+           Data->Now_Power = tmp_current;
+           Data->Now_Temperature = tmp_buffer.Temperature_Centigrade;
+
+           //存储预备信息
+           Data->Pre_Encoder = tmp_encoder;
+           if(Data->Start_Flag==0)   Data->Start_Flag = 1;
     }
 
-    Data->Total_Encoder = Data->Total_Round * Position_Max + tmp_encoder;
-
-    //计算电机本身信息
-    Data->CMD_ID = tmp_buffer.CMD_ID;
-    Data->Now_Angle = (float)Data->Total_Encoder / (float)Position_Max *360.0f;
-    Data->Now_Radian = Data->Now_Angle * DEG_TO_RAD;
-    Data->Now_Omega_Angle = tmp_omega;
-    Data->Now_Omega_Radian = tmp_omega * DEG_TO_RAD;
-    Data->Now_Power = tmp_current;
-    Data->Now_Temperature = tmp_buffer.Temperature_Centigrade;
-
-    //存储预备信息
-    Data->Pre_Encoder = tmp_encoder;
-    if(Data->Start_Flag==0)   Data->Start_Flag = 1;
 }
 
 ///**
@@ -344,11 +351,16 @@ void USB_LP_CAN1_RX0_IRQHandler(void)
         switch (CanRxStructure.StdId) {
             case 0x141:
                 //解包函数/memcpy
-                Data_Process(rxbuf, &Motor_Left);
+
+                    Data_Process(rxbuf, &Motor_Left);
+
                 break;
             case 0x142:
                 //解包函数/memcpy
+
+
                 Data_Process(rxbuf, &Motor_Right);
+
                 break;
             case 0x200:
                 //测试id

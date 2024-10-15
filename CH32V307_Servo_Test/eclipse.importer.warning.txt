@@ -38,6 +38,7 @@ Incompatible Args:
             - <undefined> = 512258282
             - <Atomic extension (RVA)> = true
             - <Extra Compressed extension (RVXW)> = true
+            - <Tuning> = ilg.gnumcueclipse.managedbuild.cross.riscv.option.target.tune.rocket
         cIncDirs: []
         cMacros: []
         cCompilerArgs:

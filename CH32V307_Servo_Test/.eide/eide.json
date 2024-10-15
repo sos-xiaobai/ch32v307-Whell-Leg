@@ -6,9 +6,13 @@
     "examples",
     "imu_lib",
     "minipc",
+    "motor",
+    "pid",
+    "remote_contrl",
     "SCSLib",
     "SRC",
-    "User"
+    "User",
+    "fashion_star_servo"
   ],
   "virtualFolder": {
     "name": "<virtual_root>",
@@ -25,18 +29,18 @@
     "obj": {
       "excludeList": [
         "examples/Ping.c",
-        "examples/WritePos.c",
+        "examples/FeedBack.c",
+        "examples/SyncRead.c",
         "examples/WriteSpe.c",
         "examples/CalibrationOfs.c",
-        "examples/ProgramEprom.c",
-        "examples/RegWritePos.c",
-        "examples/SyncRead.c",
-        "examples/SyncWritePos.c",
-        "examples/Broadcast.c",
-        "Startup",
         "Peripheral",
         "Ld",
-        "Debug"
+        "examples/SyncWritePos.c",
+        "Debug",
+        "examples/ProgramEprom.c",
+        "examples/RegWritePos.c",
+        "examples/Broadcast.c",
+        "Startup"
       ],
       "toolchain": "RISCV_GCC",
       "compileConfig": {
@@ -60,6 +64,8 @@
         "name": "default",
         "incList": [
           "SRC/Ld/Link.ld",
+          "motor",
+          "pid",
           "minipc",
           "imu_lib",
           "SRC/Debug",
