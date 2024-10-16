@@ -44,7 +44,7 @@ int position = 0;
 // 中60，低0
 float Zero_Point = 19.5;
 // 中13.5 低19.5
-int pose = 0;
+int pose = -1;
 // 1高0中-1低
 
 float Pitch_Angle_Loop_Out;
@@ -56,14 +56,14 @@ int roll_Loop_out;
 float Out_Sum;
 
 // 定义PID参数变量
-float pitch_angle_kp = 13.0f;
+float pitch_angle_kp = 25.0f;
 float pitch_angle_ki = 0.0f;
 float pitch_angle_kd = 0.0f;
-float pitch_gyro_kp  = 1.25f;
+float pitch_gyro_kp  = 1.2f;
 float pitch_gyro_ki  = 0.0f;
 float pitch_gyro_kd  = 0.0f;
-float liner_speed_kp = 800.800f;
-float liner_speed_ki = 0.65f;
+float liner_speed_kp = 300.800f;
+float liner_speed_ki = 0.0f;
 float liner_speed_kd = 0.0f;
 float yaw_kp         = -5.0f;
 float yaw_ki         = -0.0000f;
@@ -247,12 +247,12 @@ void pose_contrl()
             PID_LinerSpeed_Loop.ki=0.35;
             break;
         case -1:
-            position   = 2;
-            Zero_Point = 21.5;
-            PID_Pitch_Angle_Loop.kp=13.0;
-            PID_Pitch_Gyro_Loop.kp=1.25;
-            PID_LinerSpeed_Loop.kp=800.0;
-            PID_LinerSpeed_Loop.ki=0.65;
+            position   = 5;
+            Zero_Point = 19.5;
+//            PID_Pitch_Angle_Loop.kp=13.0;
+//            PID_Pitch_Gyro_Loop.kp=1.25;
+//            PID_LinerSpeed_Loop.kp=800.0;
+//            PID_LinerSpeed_Loop.ki=0.65;
             break;
         default:
             break;
@@ -467,7 +467,7 @@ void TIM1_UP_IRQHandler(void)
         //               lqr_angle_out=lqr_angle*(Zero_Point-hipnuc_raw.hi91.pitch)*DEG_TO_RAD;
         //               lqr_anglespeed_out=lqr_anglespeed*(0-hipnuc_raw.hi91.gyr[1])*DEG_TO_RAD;
 
-        Out_Sum = -24 + voltage_k * (Pitch_Angle_Loop_Out + Pitch_Gyro_Loop_Out + Yaw_Loop_out + Distance_Loop_out + LinerSpeed_Loop_Out);
+        Out_Sum = voltage_k * (Pitch_Angle_Loop_Out + Pitch_Gyro_Loop_Out + Yaw_Loop_out + Distance_Loop_out + LinerSpeed_Loop_Out);
 
         //               if(Out_Sum>50)
         //                   Out_Sum=50;
