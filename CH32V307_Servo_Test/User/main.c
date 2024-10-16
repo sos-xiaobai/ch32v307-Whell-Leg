@@ -22,6 +22,9 @@
 #include "pid.h"
 #include "motor.h"
 
+//#define pid 
+#define lqr 
+
 extern void setup();
 extern void loop();
 
@@ -56,30 +59,31 @@ int roll_Loop_out;
 float Out_Sum;
 
 // 定义PID参数变量
-float pitch_angle_kp = 25.0f;
+float pitch_angle_kp = 30.0f;
 float pitch_angle_ki = 0.0f;
 float pitch_angle_kd = 0.0f;
 float pitch_gyro_kp  = 1.2f;
 float pitch_gyro_ki  = 0.0f;
 float pitch_gyro_kd  = 0.0f;
-float liner_speed_kp = 300.800f;
+float liner_speed_kp = 0.800f;
 float liner_speed_ki = 0.0f;
 float liner_speed_kd = 0.0f;
 float yaw_kp         = -5.0f;
 float yaw_ki         = -0.0000f;
 float yaw_kd         = 0.0f;
-float distance_kp    = 580.0f;
+float distance_kp    = 0.0f;
 float distance_ki    = 0.0f;
 float distance_kd    = -0.0f;
 float roll_kp        = 3.0f;
 float roll_ki        = 0.0f;
 float roll_kd        = -0.0f;
-// float lqr_distance= -300.4721;
-// float lqr_lin_speed=-696.4482;
-////float lqr_lin_speed=0;
-// float lqr_angle=    1550.9876;
-// float lqr_anglespeed=11.9569;
-// float lqr_anglespeed=  0;
+
+float lqr_distance= -300.4721;
+float lqr_lin_speed=-696.4482;
+//float lqr_lin_speed=0;
+float lqr_angle=    1550.9876;
+float lqr_anglespeed=11.9569;
+
 
 float lqr_distance_out   = 0;
 float lqr_lin_speed_out  = 0;
@@ -206,6 +210,19 @@ int main(void)
 //        Delay_Ms(200);
         // printf("tmp:%.f power:%.f speed:%.f angle:%.f\r\n",Motor_Right.Now_Temperature,Motor_Right.Now_Power,Motor_Right.Now_Omega_Angle, Motor_Right.Now_Angle);
 
+    #ifdef lqr
+        printf("angle:%f,%f,%f,%f,%f,%f,%f,%f\n",
+               hipnuc_raw.hi91.pitch,
+               Out_Sum,
+               lqr_k * lqr_angle_out,
+               lqr_k * lqr_anglespeed_out,
+               lqr_k * lqr_lin_speed_out,
+               lqr_k * lqr_distance_out,
+               speed_mps,
+               distance_m);
+#endif // 
+
+#ifdef pid
         printf("angle:%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d\n",
                hipnuc_raw.hi91.pitch,
                Out_Sum,
@@ -220,16 +237,9 @@ int main(void)
                pose,
                cnt_time);
 
-        //        printf("angle:%f,%f,%f,%f,%f,%f,%f,%f\n",
-        //                hipnuc_raw.hi91.pitch,
-        //                Out_Sum,
-        //                lqr_k*lqr_angle_out,
-        //                lqr_k*lqr_anglespeed_out,
-        //                lqr_k*lqr_lin_speed_out,
-        //                lqr_k*lqr_distance_out,
-        //                speed_mps,
-        //                distance_m
-        //        );
+#endif // DEBUG
+
+        
     }
 }
 
