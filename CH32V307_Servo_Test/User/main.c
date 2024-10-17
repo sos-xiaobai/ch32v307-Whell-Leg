@@ -22,17 +22,17 @@
 #include "pid.h"
 #include "motor.h"
 
-//#define pid 
-#define lqr 
+#define pid
+// #define lqr
 
 extern void setup();
 extern void loop();
 
 extern void Leg_Control_Setup();
 
-u8 txbuf_left[8]  = {0xA0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-u8 txbuf_right[8] = {0xA0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-u8 ask_v[8]={0x9a, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+u8 txbuf_left[8]           = {0xA0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+u8 txbuf_right[8]          = {0xA0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+u8 ask_v[8]                = {0x9a, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 int32_t PowerControl_left  = 0;
 int32_t PowerControl_right = 0;
 
@@ -59,37 +59,36 @@ int roll_Loop_out;
 float Out_Sum;
 
 // 定义PID参数变量
-float pitch_angle_kp = 30.0f;
+
+float pitch_angle_kp = 13.0f;
 float pitch_angle_ki = 0.0f;
 float pitch_angle_kd = 0.0f;
 float pitch_gyro_kp  = 1.2f;
 float pitch_gyro_ki  = 0.0f;
 float pitch_gyro_kd  = 0.0f;
-float liner_speed_kp = 0.800f;
-float liner_speed_ki = 0.0f;
+float liner_speed_kp = 750.0f;
+float liner_speed_ki = 0.15f;
 float liner_speed_kd = 0.0f;
 float yaw_kp         = -5.0f;
 float yaw_ki         = -0.0000f;
 float yaw_kd         = 0.0f;
-float distance_kp    = 0.0f;
+float distance_kp    = 450.0f;
 float distance_ki    = 0.0f;
 float distance_kd    = -0.0f;
 float roll_kp        = 3.0f;
 float roll_ki        = 0.0f;
 float roll_kd        = -0.0f;
 
-float lqr_distance= -300.4721;
-float lqr_lin_speed=-696.4482;
-//float lqr_lin_speed=0;
-float lqr_angle=    1550.9876;
-float lqr_anglespeed=11.9569;
-
+float lqr_distance   = 10.0f;
+float lqr_lin_speed  = 17.307f;
+float lqr_angle      = 50.4198;
+float lqr_anglespeed = 10.7511;
 
 float lqr_distance_out   = 0;
 float lqr_lin_speed_out  = 0;
 float lqr_angle_out      = 0;
 float lqr_anglespeed_out = 0;
-float lqr_k              = 1.1;
+float lqr_k              = 15;
 
 float pid_integral_limit = 500.0f;
 float pid_output_limit   = 800.0f;
@@ -117,14 +116,14 @@ static const uint32_t RECOVERY_TIME = 2000; // 1秒 = 1000次(1000Hz)
 float Threshold                     = 1.6;
 
 int load              = 0;
-int cnt         = 0;
+int cnt               = 0;
 bool wheel_off_ground = 0;
 
 int out_left  = 0;
 int out_right = 0;
 
 int16_t test         = 1;
-uint16_t cnt_time=0;
+uint16_t cnt_time    = 0;
 float test_speed     = 0;
 float last_speed_mps = 0;
 void TIM1_Int_Init(u16 arr, u16 psc)
@@ -172,7 +171,7 @@ int main(void)
     /*配置单线半双工模式舵机串口,头超前，左舵机id为1，右舵机id为0*/
     // Leg_Control_Setup();
     Usart_Init();
-    //SysTick_Init();
+    // SysTick_Init();
     /*imu串口*/
     app_init();
     /*打印imu采集数据欢迎信息*/
@@ -190,7 +189,6 @@ int main(void)
     PID_Init(&PID_Yaw_Loop, yaw_kp, yaw_ki, yaw_kd, pid_integral_limit, pid_output_limit);
     PID_Init(&PID_Roll_Loop, roll_kp, roll_ki, roll_kd, 60, 60);
 
-
     while (1) {
 
         /*imu*/
@@ -201,16 +199,14 @@ int main(void)
         //  WritePosEx(2, out_left, 100, 250);
         //  WritePosEx(1, 1023-60, 100, 250);
 
-
-
-//        Delay_Ms(2000);
+        //        Delay_Ms(2000);
         FSUS_SetServoAngle(&usart5, 1, position, 100, 0, 0);
         Delay_Ms(10);
         FSUS_SetServoAngle(&usart5, 0, -position, 100, 0, 0);
-//        Delay_Ms(200);
+        //        Delay_Ms(200);
         // printf("tmp:%.f power:%.f speed:%.f angle:%.f\r\n",Motor_Right.Now_Temperature,Motor_Right.Now_Power,Motor_Right.Now_Omega_Angle, Motor_Right.Now_Angle);
 
-    #ifdef lqr
+#ifdef lqr
         printf("angle:%f,%f,%f,%f,%f,%f,%f,%f\n",
                hipnuc_raw.hi91.pitch,
                Out_Sum,
@@ -220,7 +216,7 @@ int main(void)
                lqr_k * lqr_distance_out,
                speed_mps,
                distance_m);
-#endif // 
+#endif //
 
 #ifdef pid
         printf("angle:%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d\n",
@@ -238,31 +234,27 @@ int main(void)
                cnt_time);
 
 #endif // DEBUG
-
-        
     }
 }
-
-
 
 void pose_contrl()
 {
     switch (pose) {
         case 0:
-            position   = 10;
-            Zero_Point = 17.5;
-            PID_Pitch_Angle_Loop.kp=16.5;
-            PID_Pitch_Gyro_Loop.kp=1.25;
-            PID_LinerSpeed_Loop.kp=600.0;
-            PID_LinerSpeed_Loop.ki=0.35;
+            position                = 10;
+            Zero_Point              = 17.5;
+            PID_Pitch_Angle_Loop.kp = 16.5;
+            PID_Pitch_Gyro_Loop.kp  = 1.25;
+            PID_LinerSpeed_Loop.kp  = 600.0;
+            PID_LinerSpeed_Loop.ki  = 0.35;
             break;
         case -1:
-            position   = 5;
-            Zero_Point = 19.5;
-//            PID_Pitch_Angle_Loop.kp=13.0;
-//            PID_Pitch_Gyro_Loop.kp=1.25;
-//            PID_LinerSpeed_Loop.kp=800.0;
-//            PID_LinerSpeed_Loop.ki=0.65;
+            position   = 2;
+            Zero_Point = 20.5;
+            //            PID_Pitch_Angle_Loop.kp=13.0;
+            //            PID_Pitch_Gyro_Loop.kp=1.25;
+            //            PID_LinerSpeed_Loop.kp=800.0;
+            //            PID_LinerSpeed_Loop.ki=0.65;
             break;
         default:
             break;
@@ -410,29 +402,46 @@ void leg_state_machine(int target_pos, int position)
     }
 }
 
-
 // 定时器2中断服务函数
 void TIM1_UP_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 void TIM1_UP_IRQHandler(void)
 {
     cnt++;
     cnt_time++;
-    // test_speed+=0.001*test;
-
     if (TIM_GetITStatus(TIM1, TIM_IT_Update) != RESET) {
         TIM_ClearITPendingBit(TIM1, TIM_IT_Update);
 
-        /*舵机*/
-        //leg_state_machine(roll_Loop_out, position);
-
-        pose_contrl();
-        // 避免电压不同造成影响
-        voltage_k = map_voltage_to_coefficient(voltage);
-
+        /*更新状态*/
         speed_mps = (Motor_Left.Now_Omega_Angle - Motor_Right.Now_Omega_Angle) / 2 * DEG_TO_RAD * 0.03;
         distance_m += speed_mps * 0.001;
         target_distance_m += test_speed * 0.001;
 
+        /*舵机*/
+        // leg_state_machine(roll_Loop_out, position);
+        /*姿态控制*/
+        pose_contrl();
+
+        /*轮部离地检测*/
+        // wheel_state_machine(last_speed_mps, speed_mps);
+
+        /*避免电压影响*/
+        voltage_k = map_voltage_to_coefficient(voltage);
+
+        /*测试蹲起*/
+        //        if(cnt_time%5000==0)
+        //        {
+        //            if(pose==0)
+        //            {
+        //                pose=-1;
+        //            }
+        //            else if(pose==-1)
+        //                {
+        //                    pose=0;
+        //                }
+        //        }
+
+#ifdef pid
+        /*pid计算*/
         PID_Calc(&PID_Pitch_Angle_Loop, Zero_Point, hipnuc_raw.hi91.pitch);
         PID_Calc(&PID_Pitch_Gyro_Loop, 0.0f, hipnuc_raw.hi91.gyr[1]);
         PID_Calc(&PID_LinerSpeed_Loop, test_speed, speed_mps);
@@ -444,8 +453,9 @@ void TIM1_UP_IRQHandler(void)
         Pitch_Gyro_Loop_Out  = PID_Pitch_Gyro_Loop.output;
         LinerSpeed_Loop_Out  = PID_LinerSpeed_Loop.output;
         Distance_Loop_out    = PID_Distance_Loop.output;
-        //Yaw_Loop_out         = PID_Yaw_Loop.output;
-        roll_Loop_out        = (int)PID_Roll_Loop.output;
+        // Yaw_Loop_out         = PID_Yaw_Loop.output;
+        roll_Loop_out = (int)PID_Roll_Loop.output;
+
         // 上电2s后打开速度环i输出
         if (cnt_time > 1800) {
             PID_LinerSpeed_Loop.ki = liner_speed_ki;
@@ -457,37 +467,22 @@ void TIM1_UP_IRQHandler(void)
             // PID_LinerSpeed_Loop.ki=0;
         }
 
-//        if(cnt_time%5000==0)
-//        {
-//            if(pose==0)
-//            {
-//                pose=-1;
-//            }
-//            else if(pose==-1)
-//                {
-//                    pose=0;
-//                }
-//        }
-
-        // 轮部离地检测
-        //wheel_state_machine(last_speed_mps, speed_mps);
-
-        //               lqr_distance_out=lqr_distance*(0-distance_m);
-        //               lqr_lin_speed_out=lqr_lin_speed*(0-speed_mps);
-        //               lqr_angle_out=lqr_angle*(Zero_Point-hipnuc_raw.hi91.pitch)*DEG_TO_RAD;
-        //               lqr_anglespeed_out=lqr_anglespeed*(0-hipnuc_raw.hi91.gyr[1])*DEG_TO_RAD;
-
         Out_Sum = voltage_k * (Pitch_Angle_Loop_Out + Pitch_Gyro_Loop_Out + Yaw_Loop_out + Distance_Loop_out + LinerSpeed_Loop_Out);
+#endif // DEBUG
+#ifdef lqr
+        /*lqr*/
+        lqr_distance_out   = lqr_distance * (0 - distance_m);
+        lqr_lin_speed_out  = lqr_lin_speed * (0 - speed_mps);
+        lqr_angle_out      = lqr_angle * (Zero_Point - hipnuc_raw.hi91.pitch) * DEG_TO_RAD;
+        lqr_anglespeed_out = lqr_anglespeed * (0 - hipnuc_raw.hi91.gyr[1]) * DEG_TO_RAD;
 
-        //               if(Out_Sum>50)
-        //                   Out_Sum=50;
-        //               if(Out_Sum<-50)
-        //                           Out_Sum=-50;
+        Out_Sum = lqr_k * (lqr_distance_out + lqr_lin_speed_out + lqr_angle_out + lqr_anglespeed_out);
+#endif // DEBUG
 
-        //               Out_Sum=1000;
-        // Out_Sum=lqr_k*(lqr_distance_out+lqr_lin_speed_out+lqr_angle_out+lqr_anglespeed_out);
-//                       Out_Sum = 0;
-//                       Yaw_Loop_out=0;
+        /*测试用*/
+        // Out_Sum = 0;
+        // Yaw_Loop_out=0;
+
         PowerControl_right = (int16_t)(Out_Sum + Yaw_Loop_out);
         PowerControl_left  = (int16_t)(-Out_Sum + Yaw_Loop_out);
 
@@ -495,16 +490,13 @@ void TIM1_UP_IRQHandler(void)
         txbuf_left[5]  = (uint8_t)(PowerControl_left >> 8);
         txbuf_right[4] = (uint8_t)(PowerControl_right & 0xff);
         txbuf_right[5] = (uint8_t)(PowerControl_right >> 8);
-                   CAN_Send_Msg(txbuf_left,8,0x141);
-                   CAN_Send_Msg(txbuf_right,8,0x142);
 
+        CAN_Send_Msg(txbuf_left, 8, 0x141);
+        CAN_Send_Msg(txbuf_right, 8, 0x142);
 
-                   if(cnt>2000)
-                   {
-                       CAN_Send_Msg(ask_v,8,0x142);
-                       cnt=0;
-                   }
-
-
+        if (cnt > 2000) {
+            CAN_Send_Msg(ask_v, 8, 0x142);
+            cnt = 0;
+        }
     }
 }
