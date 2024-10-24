@@ -25,16 +25,14 @@
         ],
         "files.associations": {
             "usart.h": "c",
-            "ring_buffer.h": "c",
-            "motor.h": "c",
-            "pid.h": "c",
+            "pstwo.h": "c",
             "hipnuc.h": "c",
-            "debug.h": "c",
-            "stdio.h": "c",
             "fashion_star_uart_servo.h": "c",
-            "ch32v30x.h": "c",
+            "minipc.h": "c",
+            "pid.h": "c",
+            "motor.h": "c",
             "sys_tick.h": "c",
-            "math.h": "c"
+            "debug.h": "c"
         }
     },
     "extensions": {}

@@ -4,6 +4,7 @@
   "dependenceList": [],
   "srcDirs": [
     "examples",
+    "fashion_star_servo",
     "imu_lib",
     "minipc",
     "motor",
@@ -11,8 +12,7 @@
     "remote_contrl",
     "SCSLib",
     "SRC",
-    "User",
-    "fashion_star_servo"
+    "User"
   ],
   "virtualFolder": {
     "name": "<virtual_root>",
@@ -64,6 +64,7 @@
         "name": "default",
         "incList": [
           "SRC/Ld/Link.ld",
+          "fashion_star_servo",
           "motor",
           "pid",
           "minipc",
