@@ -152,7 +152,7 @@ u8 PS2_DataKey()
 	PS2_Controller_t.RX=PS2_AnologData(PSS_RX);
 	PS2_Controller_t.RY=PS2_AnologData(PSS_RY);
 
-    Robot_Control_t.linear_velocity = -((float)PS2_Controller_t.LY - 128.0f) / 128.0f;
+    Robot_Control_t.linear_velocity = -0.2*((float)PS2_Controller_t.LY - 128.0f) / 128.0f;
 
     Handkey = (Data[4] << 8) | Data[3]; // 这是16个按键  按下为0， 未按下为1
     for (index = 0; index < 16; index++) {

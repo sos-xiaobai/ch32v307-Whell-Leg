@@ -59,7 +59,7 @@ int position = 3;
 // 中60，低0
 float Zero_Point = 17.5;
 // 中13.5 低19.5
-int pose = -1;
+int pose = 0;
 // 1高0中-1低
 float compensation_right = 1.0f;
 
@@ -88,17 +88,18 @@ float yaw_kd         = 0.0f;
 float distance_kp    = 450.0f;
 float distance_ki    = 0.0f;
 float distance_kd    = -0.0f;
-float roll_kp        = 1.0f;
-float roll_ki        = 0.0f;
-float roll_kd        = -0.0f;
+
 
 float lqr_distance   = 0.0f;
 float lqr_lin_speed  = 0.0f; // 0.539f;
 float lqr_angle      = 0.0f;
 float lqr_anglespeed = 0.0f; // 0.2046f;
 
-float lqr_yaw_angle       = -1.0f;
-float lqr_yaw_angle_speed = -0.15f;
+float lqr_yaw_angle       = -5.5f;
+float lqr_yaw_angle_speed = -0.62f;
+
+float lqr_roll_angle       = 0.45f;
+float lqr_roll_angle_speed = 0.0f;
 
 float lqr_distance_out   = 0;
 float lqr_lin_speed_out  = 0;
@@ -116,7 +117,7 @@ float target_distance_m = 0;
 
 float voltage_k = 0;
 
-float max_speed = 1.2;
+float max_speed = 0.7;
 
 // 定义状态枚举
 typedef enum {
@@ -204,8 +205,8 @@ int main(void)
     PID_Init(&PID_Pitch_Gyro_Loop, pitch_gyro_kp, pitch_gyro_ki, pitch_gyro_kd, pid_integral_limit, pid_output_limit);
     PID_Init(&PID_LinerSpeed_Loop, liner_speed_kp, liner_speed_ki, liner_speed_kd, pid_integral_limit, 500);
     PID_Init(&PID_Distance_Loop, distance_kp, 0, 0, pid_integral_limit, pid_output_limit);
-    PID_Init(&PID_Yaw_Loop, yaw_kp, yaw_ki, yaw_kd, pid_integral_limit, pid_output_limit);
-    PID_Init(&PID_Roll_Loop, roll_kp, roll_ki, roll_kd, 60, 60);
+    // PID_Init(&PID_Yaw_Loop, yaw_kp, yaw_ki, yaw_kd, pid_integral_limit, pid_output_limit);
+    // PID_Init(&PID_Roll_Loop, roll_kp, roll_ki, roll_kd, 60, 60);
 
     while (1) {
 
@@ -213,12 +214,13 @@ int main(void)
         process_data();
 
         /*ps2读取*/
-        PS2_DataKey();
+        //PS2_DataKey();
 
-
-        FSUS_SetServoAngle(&usart5, 1, LIMIT_left(jump_outPut+position + roll_Loop_out), 10, 0, 0);
+        //左腿
+        FSUS_SetServoAngle(&usart5, 1, LIMIT_left(jump_outPut+position+roll_Loop_out ), 10, 0, 0);
         Delay_Ms(10);
-        FSUS_SetServoAngle(&usart5, 0, LIMIT_right(-jump_outPut-position + roll_Loop_out), 10, 0, 0);
+        //右腿
+        FSUS_SetServoAngle(&usart5, 0, LIMIT_right(-jump_outPut-position+roll_Loop_out ), 10, 0, 0);
         /*SCS15舵机函数，暂时弃用*/
         // voltage=ReadVoltage(1);
         //  WritePosEx(2, out_left, 100, 250);
@@ -267,18 +269,18 @@ void pose_contrl()
         case 0:
             position   = 20;
             Zero_Point = 7.4;
-            lqr_distance   = 0.0816;
-            lqr_lin_speed  = 0.0894;
-            lqr_angle      = 0.3762;
-            lqr_anglespeed = 0.0480;
+            lqr_distance   = 0.0645;
+            lqr_lin_speed  = 0.0823;
+            lqr_angle      = 0.3869;
+            lqr_anglespeed = 0.0448;
             break;
         case -1:
             position   = 0;
-            Zero_Point = 17.2;
-            lqr_distance   = 0.0816;
-            lqr_lin_speed  = 0.1033;
-            lqr_angle      = 0.2901;
-            lqr_anglespeed = 0.0352;
+            Zero_Point = 16.5;
+            lqr_distance   = 0.0645;
+            lqr_lin_speed  = 0.0841;
+            lqr_angle      = 0.3292;
+            lqr_anglespeed = 0.0340;
             break;
         default:
             break;
@@ -475,10 +477,11 @@ void TIM1_UP_IRQHandler(void)
         //                test_speed=0.3;
         //        }
         // PID_Calc(&PID_Yaw_Loop, 0.0f, hipnuc_raw.hi91.yaw);
-        PID_Calc(&PID_Roll_Loop, 0.0f, hipnuc_raw.hi91.roll);
-
+        //PID_Calc(&PID_Roll_Loop, 0.0f, hipnuc_raw.hi91.roll);
+        
         Yaw_Loop_out = (0 - hipnuc_raw.hi91.yaw) * lqr_yaw_angle + (0 - hipnuc_raw.hi91.gyr[2]) * lqr_yaw_angle_speed;
-        roll_Loop_out = PID_Roll_Loop.output;
+        roll_Loop_out = (0-hipnuc_raw.hi91.roll)*lqr_roll_angle + (0-hipnuc_raw.hi91.gyr[0])*lqr_roll_angle_speed;
+        roll_Loop_out+=roll_Loop_out;
 #ifdef pid
         /*pid计算*/
         PID_Calc(&PID_Pitch_Angle_Loop, Zero_Point, hipnuc_raw.hi91.pitch);
@@ -510,24 +513,51 @@ void TIM1_UP_IRQHandler(void)
         lqr_lin_speed_out  = lqr_lin_speed * (test_speed - speed_mps);
         lqr_angle_out      = lqr_angle * (Zero_Point - hipnuc_raw.hi91.pitch) * DEG_TO_RAD;
         lqr_anglespeed_out = lqr_anglespeed * (0 - hipnuc_raw.hi91.gyr[1]) * DEG_TO_RAD;
+
+
+        //lqr_distance_out=0;
+
+//        if(lqr_lin_speed_out>100)
+//        {
+//            lqr_lin_speed_out=100;
+//        }
+//        if(lqr_lin_speed_out<-100)
+//        {
+//            lqr_lin_speed_out=-100;
+//        }
+        float lqr_angle_out_limit=200;
+//                if(lqr_angle_out>lqr_angle_out_limit)
+//                {
+//                    lqr_angle_out=lqr_angle_out_limit;
+//                }
+//                if(lqr_angle_out<-lqr_angle_out_limit)
+//                {
+//                    lqr_angle_out=-lqr_angle_out_limit;
+//                }
+
         //
         //        lqr_distance_out   = -lqr_distance * (0 - distance_m);
         //        lqr_lin_speed_out  = -lqr_lin_speed * (0 - speed_mps);
         //        lqr_angle_out      = 0;
         //        lqr_anglespeed_out = 0;
 
+//        if(Robot_Control_t.enable)
+//        {
+//            test_speed=Robot_Control_t.linear_velocity;
+//        }
+
         // 上电2s后打开速度输出
-        if (cnt_time > 1800) {
-            test_speed += 0.0001 * test;
-
-            if (test_speed >= max_speed) {
-                // test_speed = max_speed;
-                test_speed -= 0.0001 * test;
-            }
-
-        } else {
-            // PID_LinerSpeed_Loop.ki=0;
-        }
+//        if (cnt_time > 1800) {
+//            test_speed += 0.0001 * test;
+//
+//            if (test_speed >= max_speed) {
+//                 test_speed = max_speed;
+//                //test_speed -= 0.0001 * test;
+//            }
+//
+//        } else {
+//            // PID_LinerSpeed_Loop.ki=0;
+//        }
 
         Out_Sum = lqr_k * (lqr_distance_out + lqr_lin_speed_out + lqr_angle_out + lqr_anglespeed_out) / 2;
 
@@ -538,9 +568,9 @@ void TIM1_UP_IRQHandler(void)
          //Out_Sum = 0;
         // Yaw_Loop_out=0;
 
-        if (hipnuc_raw.hi91.pitch > 80 || hipnuc_raw.hi91.pitch < -80||jump_state==JUMP_THRUST) {
-            Out_Sum = 0;
-        }
+//        if (hipnuc_raw.hi91.pitch > 80 || hipnuc_raw.hi91.pitch < -80||jump_state==JUMP_THRUST) {
+//            Out_Sum = 0;
+//        }
 
         PowerControl_right = (int16_t)(compensation_right * (Out_Sum + Yaw_Loop_out));
         PowerControl_left  = (int16_t)(-Out_Sum + Yaw_Loop_out);
