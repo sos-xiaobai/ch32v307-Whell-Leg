@@ -59,7 +59,7 @@ int position = 3;
 // 中60，低0
 float Zero_Point = 17.5;
 // 中13.5 低19.5
-int pose = 0;
+int pose = -1;
 // 1高0中-1低
 float compensation_right = 1.0f;
 
@@ -68,7 +68,8 @@ float Pitch_Gyro_Loop_Out;
 float LinerSpeed_Loop_Out;
 float Distance_Loop_out;
 float Yaw_Loop_out;
-int roll_Loop_out;
+float roll_Loop_out;
+float roll_Loop_out_sum;
 float Out_Sum;
 
 // 定义PID参数变量
@@ -98,7 +99,7 @@ float lqr_anglespeed = 0.0f; // 0.2046f;
 float lqr_yaw_angle       = -5.5f;
 float lqr_yaw_angle_speed = -0.62f;
 
-float lqr_roll_angle       = 0.45f;
+float lqr_roll_angle       = 0.003f;
 float lqr_roll_angle_speed = 0.0f;
 
 float lqr_distance_out   = 0;
@@ -216,11 +217,12 @@ int main(void)
         /*ps2读取*/
         //PS2_DataKey();
 
+
         //左腿
-        FSUS_SetServoAngle(&usart5, 1, LIMIT_left(jump_outPut+position+roll_Loop_out ), 10, 0, 0);
+        FSUS_SetServoAngle(&usart5, 1, LIMIT_left(jump_outPut+position+roll_Loop_out_sum ), 10, 0, 0);
         Delay_Ms(10);
         //右腿
-        FSUS_SetServoAngle(&usart5, 0, LIMIT_right(-jump_outPut-position+roll_Loop_out ), 10, 0, 0);
+        FSUS_SetServoAngle(&usart5, 0, LIMIT_right(-jump_outPut-position+roll_Loop_out_sum ), 10, 0, 0);
         /*SCS15舵机函数，暂时弃用*/
         // voltage=ReadVoltage(1);
         //  WritePosEx(2, out_left, 100, 250);
@@ -269,6 +271,7 @@ void pose_contrl()
         case 0:
             position   = 20;
             Zero_Point = 7.4;
+
             lqr_distance   = 0.0645;
             lqr_lin_speed  = 0.0823;
             lqr_angle      = 0.3869;
@@ -480,8 +483,19 @@ void TIM1_UP_IRQHandler(void)
         //PID_Calc(&PID_Roll_Loop, 0.0f, hipnuc_raw.hi91.roll);
         
         Yaw_Loop_out = (0 - hipnuc_raw.hi91.yaw) * lqr_yaw_angle + (0 - hipnuc_raw.hi91.gyr[2]) * lqr_yaw_angle_speed;
-        roll_Loop_out = (0-hipnuc_raw.hi91.roll)*lqr_roll_angle + (0-hipnuc_raw.hi91.gyr[0])*lqr_roll_angle_speed;
-        roll_Loop_out+=roll_Loop_out;
+        if(fabs(hipnuc_raw.hi91.roll)>0.2f)
+        {
+            roll_Loop_out = (0-hipnuc_raw.hi91.roll)*lqr_roll_angle + (0-hipnuc_raw.hi91.gyr[0])*lqr_roll_angle_speed;
+            roll_Loop_out_sum+=roll_Loop_out;
+            if(roll_Loop_out_sum>=10.0f)
+            {
+                roll_Loop_out_sum = 10.0f;
+            }
+            if(roll_Loop_out_sum<=-10.0f)
+            {
+                roll_Loop_out_sum = -10.0f;
+            }
+        }
 #ifdef pid
         /*pid计算*/
         PID_Calc(&PID_Pitch_Angle_Loop, Zero_Point, hipnuc_raw.hi91.pitch);
@@ -515,7 +529,7 @@ void TIM1_UP_IRQHandler(void)
         lqr_anglespeed_out = lqr_anglespeed * (0 - hipnuc_raw.hi91.gyr[1]) * DEG_TO_RAD;
 
 
-        //lqr_distance_out=0;
+        lqr_distance_out=0;
 
 //        if(lqr_lin_speed_out>100)
 //        {
