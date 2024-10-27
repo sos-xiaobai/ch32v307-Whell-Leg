@@ -22,6 +22,8 @@
 #include "pid.h"
 #include "motor.h"
 #include "pstwo.h"
+#include "nangu_servo.h"
+
 // #define pid
 #define lqr
 
@@ -168,7 +170,7 @@ void TIM1_Int_Init(u16 arr, u16 psc)
 
     TIM_Cmd(TIM1, ENABLE); // TIM1使能
 }
-
+ int offset=-4;
 int main(void)
 {
     /* System Clock Configuration */
@@ -200,6 +202,9 @@ int main(void)
     /*遥控器初始化*/
     PS2_Init();
 
+    /*南古舵机初始化*/
+    nangu_servo_init();
+
     // PID初始化
     /*角度pid初始化*/
     PID_Init(&PID_Pitch_Angle_Loop, pitch_angle_kp, pitch_angle_ki, pitch_angle_kd, pid_integral_limit, pid_output_limit);
@@ -218,11 +223,24 @@ int main(void)
         //PS2_DataKey();
 
 
-        //左腿
-        FSUS_SetServoAngle(&usart5, 1, LIMIT_left(jump_outPut+position+roll_Loop_out_sum ), 10, 0, 0);
-        Delay_Ms(10);
-        //右腿
-        FSUS_SetServoAngle(&usart5, 0, LIMIT_right(-jump_outPut-position+roll_Loop_out_sum ), 10, 0, 0);
+//        //左腿
+//        FSUS_SetServoAngle(&usart5, 1, LIMIT_left(jump_outPut+position+roll_Loop_out_sum ), 10, 0, 0);
+//        Delay_Ms(10);
+//        //右腿
+//        FSUS_SetServoAngle(&usart5, 0, LIMIT_right(-jump_outPut-position+roll_Loop_out_sum ), 10, 0, 0);
+        /*南古舵机函数*/
+
+        set_servo_angle(SERVO_CHANNEL_1, 0+offset);
+        set_servo_angle(SERVO_CHANNEL_2, 0);
+        Delay_Ms(1000);
+
+        set_servo_angle(SERVO_CHANNEL_1, -30+offset);
+        set_servo_angle(SERVO_CHANNEL_2, 30);
+        Delay_Ms(80);
+        set_servo_angle(SERVO_CHANNEL_1, 0+offset);
+        set_servo_angle(SERVO_CHANNEL_2, 0);
+
+        Delay_Ms(1000);
         /*SCS15舵机函数，暂时弃用*/
         // voltage=ReadVoltage(1);
         //  WritePosEx(2, out_left, 100, 250);
@@ -596,8 +614,8 @@ void TIM1_UP_IRQHandler(void)
 
         //        uint8_t t[8]={0x32, 0,100,100,40,14,0x3c,0x28};
         //        CAN_Send_Msg(t, 8, 0x142);
-        CAN_Send_Msg(txbuf_left, 8, 0x141);
-        CAN_Send_Msg(txbuf_right, 8, 0x142);
+        // CAN_Send_Msg(txbuf_left, 8, 0x141);
+        // CAN_Send_Msg(txbuf_right, 8, 0x142);
 
         //        if (cnt > 2000) {
         //            CAN_Send_Msg(ask_v, 8, 0x142);

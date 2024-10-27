@@ -8,6 +8,7 @@
     "imu_lib",
     "minipc",
     "motor",
+    "nangu_servo",
     "pid",
     "remote_contrl",
     "SCSLib",
@@ -64,6 +65,8 @@
         "name": "default",
         "incList": [
           "SRC/Ld/Link.ld",
+          "nangu_servo",
+          "remote_contrl",
           "fashion_star_servo",
           "motor",
           "pid",
