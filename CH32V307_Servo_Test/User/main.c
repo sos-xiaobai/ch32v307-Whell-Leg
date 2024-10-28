@@ -228,19 +228,19 @@ int main(void)
 //        Delay_Ms(10);
 //        //右腿
 //        FSUS_SetServoAngle(&usart5, 0, LIMIT_right(-jump_outPut-position+roll_Loop_out_sum ), 10, 0, 0);
-        /*南古舵机函数*/
+//        /*南古舵机函数*/
+//
+//        set_servo_angle(SERVO_CHANNEL_1, 0+offset);
+//        set_servo_angle(SERVO_CHANNEL_2, 0);
+        //Delay_Ms(1000);
 
-        set_servo_angle(SERVO_CHANNEL_1, 0+offset);
-        set_servo_angle(SERVO_CHANNEL_2, 0);
-        Delay_Ms(1000);
+//        set_servo_angle(SERVO_CHANNEL_1, -30+offset);
+//        set_servo_angle(SERVO_CHANNEL_2, 30);
+//        Delay_Ms(80);
+//        set_servo_angle(SERVO_CHANNEL_1, 0+offset);
+//        set_servo_angle(SERVO_CHANNEL_2, 0);
 
-        set_servo_angle(SERVO_CHANNEL_1, -30+offset);
-        set_servo_angle(SERVO_CHANNEL_2, 30);
-        Delay_Ms(80);
-        set_servo_angle(SERVO_CHANNEL_1, 0+offset);
-        set_servo_angle(SERVO_CHANNEL_2, 0);
-
-        Delay_Ms(1000);
+        //Delay_Ms(2000);
         /*SCS15舵机函数，暂时弃用*/
         // voltage=ReadVoltage(1);
         //  WritePosEx(2, out_left, 100, 250);
@@ -478,6 +478,23 @@ void TIM1_UP_IRQHandler(void)
         voltage_k = map_voltage_to_coefficient(voltage);
 
         /*测试蹲起*/
+
+        /*南古舵机函数*/
+        if(cnt_time<2000)
+        {
+            set_servo_angle(SERVO_CHANNEL_1, -5+offset);
+            set_servo_angle(SERVO_CHANNEL_2, 5);
+        }
+        else if(cnt_time>2000 && cnt_time<2080)
+        {
+            set_servo_angle(SERVO_CHANNEL_1, -30+offset);
+            set_servo_angle(SERVO_CHANNEL_2, 30);
+        }
+        else if(cnt_time>2080)
+        {
+            cnt_time = 0;
+        }
+
 //                        if(cnt_time%5000==0)
 //                        {
 //                            if(pose==0)
@@ -557,7 +574,7 @@ void TIM1_UP_IRQHandler(void)
 //        {
 //            lqr_lin_speed_out=-100;
 //        }
-        float lqr_angle_out_limit=200;
+        //float lqr_angle_out_limit=200;
 //                if(lqr_angle_out>lqr_angle_out_limit)
 //                {
 //                    lqr_angle_out=lqr_angle_out_limit;
@@ -614,8 +631,8 @@ void TIM1_UP_IRQHandler(void)
 
         //        uint8_t t[8]={0x32, 0,100,100,40,14,0x3c,0x28};
         //        CAN_Send_Msg(t, 8, 0x142);
-        // CAN_Send_Msg(txbuf_left, 8, 0x141);
-        // CAN_Send_Msg(txbuf_right, 8, 0x142);
+         CAN_Send_Msg(txbuf_left, 8, 0x141);
+         CAN_Send_Msg(txbuf_right, 8, 0x142);
 
         //        if (cnt > 2000) {
         //            CAN_Send_Msg(ask_v, 8, 0x142);
